@@ -87,9 +87,6 @@ public class XMLParser {
             SAXException,
             IOException {
 
-        /*
-            
-         */
         String eventList[] = new String[PROPERTIES_NUMBER];
 
         DocumentBuilderFactory DocumentFactory = DocumentBuilderFactory.newInstance();
@@ -108,6 +105,35 @@ public class XMLParser {
         return eventList;
     }
 
+    // получить полный список имеющихся событий в виде двумерного массива
+    public static String[][] getAllEvents(String filename) throws
+            ParserConfigurationException,
+            SAXException,
+            IOException {
+
+        DocumentBuilderFactory DocumentFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = DocumentFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(filename);
+        Node root = document.getDocumentElement();
+        NodeList events = root.getChildNodes();
+
+        int count = events.getLength();
+        
+        String s[][] = new String[count][PROPERTIES_NUMBER];
+        
+        for (int i=0; i < count; i++) {
+            
+            Node event = events.item(i);
+            //String s[] = new String[PROPERTIES_NUMBER];
+                    
+            for (int j = 0; j < PROPERTIES_NUMBER; j++) {
+                s[i][j] = event.getChildNodes().item(j).getTextContent();
+            }
+        }
+        
+        return s;
+    }
+
     // Удалить событие с индексом index
     public static void removeEvent(int index, String filename) throws
             ParserConfigurationException,
@@ -121,8 +147,15 @@ public class XMLParser {
         Node root = document.getDocumentElement();
         NodeList events = root.getChildNodes();
         Node event = events.item(index);
-
+        // удаляем событие с индексом index
         root.removeChild(event);
+
+        // меняем порядковые номера оставшихся в списке событий, чтобы сохранить последовательность
+        for (int i = 0; i < events.getLength(); i++) {
+            event = events.item(i);
+
+            event.getChildNodes().item(0).getFirstChild().setNodeValue(String.valueOf(i + 1));
+        }
 
         writeDocument(document, filename);
     }
@@ -161,12 +194,18 @@ public class XMLParser {
         DocumentBuilder documentBuilder = DocumentFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(filename);
         Node root = document.getDocumentElement();
-        //NodeList events = root.getChildNodes();
+        NodeList events = root.getChildNodes();
+
+        int eventsNumber = events.getLength();
 
         // Создаем новую книгу по элементам
         Element event = document.createElement("Event");
 
-        for (int i = 0; i < PROPERTIES_NUMBER; i++) {
+        Element number = document.createElement("Number");
+        number.setTextContent(String.valueOf(eventsNumber + 1));
+        event.appendChild(number);
+
+        for (int i = 1; i < PROPERTIES_NUMBER; i++) {
             Element e = document.createElement(PROPERTIES_LIST[i]);
             e.setTextContent(eventList[i]);
             event.appendChild(e);
@@ -176,6 +215,21 @@ public class XMLParser {
 
         // Записываем XML в файл
         writeDocument(document, filename);
+    }
+
+    // Фунцкия для подсчёта количества записанных в файл событий
+    public static int countEvents(String filename) throws
+            ParserConfigurationException,
+            SAXException,
+            IOException {
+
+        DocumentBuilderFactory DocumentFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = DocumentFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(filename);
+        Node root = document.getDocumentElement();
+        NodeList events = root.getChildNodes();
+
+        return events.getLength();
     }
 
     // Функция для сохранения DOM в файл
