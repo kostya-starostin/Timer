@@ -42,11 +42,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-/**
- * @author tolik88baranov
- * @version 0.1
- *
- */
+
 public class XMLParser {
 
     // Набор свойств (тегов), описывающих событие
@@ -182,7 +178,7 @@ public class XMLParser {
     }
 
     // Добавление нового события в конец XML-файла
-    public static void addEnevt(String[] eventList, String filename) throws
+    public static void addEvent(String[] eventList, String filename) throws
             ParserConfigurationException,
             SAXException,
             IOException,
