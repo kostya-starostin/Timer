@@ -46,12 +46,11 @@ import org.xml.sax.SAXException;
 public class XMLParser {
 
     // Набор свойств (тегов), описывающих событие
-    private static final String[] PROPERTIES_LIST
-            = {"Number",
-                "Name",
-                "Time",
-                "Remark",
-                "Priority"};
+    private static final String[] PROPERTIES_LIST = {"Number",
+                                                    "Name",
+                                                    "Time",
+                                                    "Remark",
+                                                    "Priority"};
 
     // Количество свойств, описывающих  событие
     private static final int PROPERTIES_NUMBER = PROPERTIES_LIST.length;
