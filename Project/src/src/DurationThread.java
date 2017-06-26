@@ -7,7 +7,7 @@
 public NewJFrame() {
         initComponents();
         DurationThread dtr = new DurationThread(jLabel1,
-                LocalDateTime.of(2017, 6, 26, 22, 44, 15));
+                LocalDateTime.of(2017, 6, 28, 19, 30, 0));
     }
 */
 
