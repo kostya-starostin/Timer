@@ -2,6 +2,13 @@
 Класс определяет поток выполнения для какого-либо события.
 При создании экземпляра ожидает получить на входе метку, в поле которой будет
 отображаться результат, и время окончания события.
+Чтобы заработало, надо в главном файле вот это прописать DurationThread dtr = new DurationThread(jLabel1, LocalDateTime.of(2017, 6, 26, 22, 44, 15));:
+вот в этом блоке кода:
+public NewJFrame() {
+        initComponents();
+        DurationThread dtr = new DurationThread(jLabel1,
+                LocalDateTime.of(2017, 6, 26, 22, 44, 15));
+    }
 */
 
 package motivator;
