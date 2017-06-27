@@ -5,7 +5,7 @@
  */
 package motivator;
 
-import java.io.FileFilter;
+
 import java.time.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 /**
@@ -19,6 +19,8 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     public NewJFrame() {
         initComponents();
+        DurationThread drt = new DurationThread(jLabel1,
+                LocalDateTime.of(2017,7,26, 10,10,10));
     }
 
     /**

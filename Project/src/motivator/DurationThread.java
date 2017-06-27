@@ -13,12 +13,11 @@ public NewJFrame() {
 
 package motivator;
 
-import java.awt.Label;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
+
 
 public class DurationThread {
 
