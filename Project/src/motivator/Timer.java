@@ -1,4 +1,4 @@
-package src;
+package motivator;
 
 
 public class Timer {

@@ -1,20 +1,17 @@
-package src;
+package motivator;
 
 import javax.swing.*;
 
-/**
- * Created by bensonizabel on 14.06.17.
- */
-public class Meeting extends Events{
+public class Journey extends Events{
     int day;
     String name;
-    int priority;
     public void action(){
         String str = "Добавлено новое событие:";
         str+="Дней до конца = "+day+"\n";
         str+="Событие="  +name+  "\n";
-        str+="Приоритет" +priority+ "\n";
         JOptionPane.showMessageDialog(null, str);
     }
 
+
 }
+

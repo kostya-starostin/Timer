@@ -1,4 +1,4 @@
-package src;
+package motivator;
 
 import javax.swing.*;
 
