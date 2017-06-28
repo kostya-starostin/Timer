@@ -2,35 +2,50 @@
 Класс определяет поток выполнения для какого-либо события.
 При создании экземпляра ожидает получить на входе метку, в поле которой будет
 отображаться результат, и время окончания события.
-Чтобы заработало, надо в главном файле вот это прописать DurationThread dtr = new DurationThread(jLabel1, LocalDateTime.of(2017, 6, 26, 22, 44, 15));:
-вот в этом блоке кода:
-public NewJFrame() {
-        initComponents();
-        DurationThread dtr = new DurationThread(jLabel1,
-                LocalDateTime.of(2017, 6, 28, 19, 30, 0));
-    }
-*/
-
+ */
 package motivator;
 
-
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JLabel;
 
+public class DurationThread extends Thread {
 
-public class DurationThread {
+    private JLabel label;
+    private String finDateTime[];
 
-    public DurationThread(JLabel label, LocalDateTime finish) {
+    public DurationThread(JLabel label, String finDateTime[]) {
+        this.label = label;
+        this.finDateTime = finDateTime;
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
+    @Override
+    public void run() {
+
+        if (!finDateTime[0].equals(" ")) {
+            while (true) {
+
+                if (!Thread.interrupted()) {
+
+                    LocalDateTime finish = LocalDateTime.of(
+                            LocalDate.parse(finDateTime[0], DateTimeFormatter.ISO_LOCAL_DATE),
+                            LocalTime.parse(finDateTime[1], DateTimeFormatter.ISO_LOCAL_TIME));
+
                     // текущее время
                     LocalDateTime start = LocalDateTime.now();
+
                     // разница между текущим временем и временем окончания
                     Duration d = Duration.between(start, finish);
+
+                    if (d.isZero() || d.isNegative()) {
+                        this.interrupt();
+                        Font f = new Font(label.getFont().getName(), label.getFont().getStyle(), 24);
+                        label.setFont(f);
+                        label.setText("Список событий пуст");
+                        return;
+                    }
 
                     // сколько осталось дней, месяцев, часов, минут, секунд
                     long months = (long) (d.toDays() / 30.4);
@@ -55,12 +70,19 @@ public class DurationThread {
                         res = seconds % 60 + " секунд";
                     }
 
-                    // вывод текста в поле метки
+                    Font f = new Font(label.getFont().getName(), label.getFont().getStyle(), 36);
+                    label.setFont(f);
                     label.setText(res);
+                } else {
+
+                    return;
                 }
             }
-        }
-        ).start();
-    }
 
+        } else {
+            Font f = new Font(label.getFont().getName(), label.getFont().getStyle(), 24);
+            label.setFont(f);
+            label.setText("Список событий пуст");
+        }
+    }
 }

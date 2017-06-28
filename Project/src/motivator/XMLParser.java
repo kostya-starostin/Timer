@@ -14,7 +14,6 @@
         <Name>Название события</Name>
         <Time>Время окончания события</Time>
         <Remark>Примечание</Remark>
-        <Priority>Приоритет</Priority>
     </Event>
 
  Структура строкового массива:
@@ -42,15 +41,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
 public class XMLParser {
 
     // Набор свойств (тегов), описывающих событие
     private static final String[] PROPERTIES_LIST = {"Number",
-                                                    "Name",
-                                                    "Time",
-                                                    "Remark",
-                                                    "Priority"};
+        "Name",
+        "Time",
+        "Remark"};
 
     // Количество свойств, описывающих  событие
     private static final int PROPERTIES_NUMBER = PROPERTIES_LIST.length;
@@ -89,12 +86,11 @@ public class XMLParser {
         Document document = documentBuilder.parse(filename);
         Node root = document.getDocumentElement();
         NodeList events = root.getChildNodes();
+        Node event = events.item(index);
 
-        for (int i = 0; i < events.getLength(); i++) {
-            Node event = events.item(i);
-            if (event.getNodeType() != Node.TEXT_NODE) {
-                eventList[i] = event.getFirstChild().getTextContent();
-            }
+        for (int j = 0; j < event.getChildNodes().getLength(); j++) {
+            String s = event.getChildNodes().item(j).getFirstChild().getTextContent();
+            eventList[j] = s;
         }
 
         return eventList;
@@ -113,19 +109,16 @@ public class XMLParser {
         NodeList events = root.getChildNodes();
 
         int count = events.getLength();
-        
+
         String s[][] = new String[count][PROPERTIES_NUMBER];
-        
-        for (int i=0; i < count; i++) {
-            
+
+        for (int i = 0; i < count; i++) {
             Node event = events.item(i);
-            //String s[] = new String[PROPERTIES_NUMBER];
-                    
             for (int j = 0; j < PROPERTIES_NUMBER; j++) {
                 s[i][j] = event.getChildNodes().item(j).getTextContent();
             }
         }
-        
+
         return s;
     }
 
@@ -176,8 +169,9 @@ public class XMLParser {
         writeDocument(document, filename);
     }
 
-    // Добавление нового события в конец XML-файла
-    public static void addEvent(String[] eventList, String filename) throws
+    // Добавление записи о новом событии в конец XML-файла
+    public static void addEvent(String time, String name, String remark,
+            String filename) throws
             ParserConfigurationException,
             SAXException,
             IOException,
@@ -193,19 +187,19 @@ public class XMLParser {
 
         int eventsNumber = events.getLength();
 
+        // Номер события не передаётся от пользователя, а задаётся автоматически
+        String number = String.valueOf(eventsNumber + 1);
+        // Создаём массив параметров события
+        String eventList[] = {number, name, time, remark};
         // Создаем новую книгу по элементам
         Element event = document.createElement("Event");
-
-        Element number = document.createElement("Number");
-        number.setTextContent(String.valueOf(eventsNumber + 1));
-        event.appendChild(number);
-
-        for (int i = 1; i < PROPERTIES_NUMBER; i++) {
+        // Записываем параметры события модель события
+        for (int i = 0; i < PROPERTIES_NUMBER; i++) {
             Element e = document.createElement(PROPERTIES_LIST[i]);
             e.setTextContent(eventList[i]);
             event.appendChild(e);
         }
-
+        // Добавляем модель события в документ
         root.appendChild(event);
 
         // Записываем XML в файл
